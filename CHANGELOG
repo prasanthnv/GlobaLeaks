@@ -1,3 +1,13 @@
+Changes in version 4.14.4
+    Correct assignment of classes on <body> tag
+    Set globaleks to use dedicated uid/gid: 999
+    Ensure one could change the report status without specifying a motivation (#3935)
+    Fix visualization of user preferences for analyst user role (#3940)
+    Implement autofocus on first input of login pages (#3744)
+    Improve accessibility by setting initial focus on the reporting questionnaire
+    Bump npm dependencies to latest versions
+    Update translations
+
 Changes in version 4.14.3
     Apply minor bugfixing on release 4.14.0; see git log for details
 
