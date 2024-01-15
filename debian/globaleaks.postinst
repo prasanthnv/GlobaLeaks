@@ -9,6 +9,8 @@ if ! id -u globaleaks >/dev/null 2>&1; then
           --group \
           --disabled-login \
           --disabled-password \
+          --uid 999 \
+          --gid 999 \
           --home /var/globaleaks \
           --shell /bin/false \
           globaleaks
