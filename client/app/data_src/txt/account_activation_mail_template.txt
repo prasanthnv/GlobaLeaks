@@ -7,6 +7,8 @@ Activation link: {Url}
 
 Please click on the activation link to proceed with the account activation and to set your user password.
 
+The link will expire in 7 days.
+
 After successful activation you will be able to access the system via the following link: {LoginUrl}
 {AccountRecoveryKeyInstructions}
 
