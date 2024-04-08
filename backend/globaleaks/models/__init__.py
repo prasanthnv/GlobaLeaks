@@ -14,12 +14,14 @@ class LocalizationEngine(object):
     """
     This Class can manage all the localized strings inside one ORM object
     """
+
     def __init__(self, keys):
         self._localized_strings = {}
         self._localized_keys = keys
 
     def acquire_orm_object(self, obj):
-        self._localized_strings = {key: getattr(obj, key) for key in self._localized_keys}
+        self._localized_strings = {key: getattr(
+            obj, key) for key in self._localized_keys}
 
     def acquire_multilang_dict(self, obj):
         self._localized_strings = {}
@@ -73,7 +75,8 @@ def get_localized_values(dictionary, obj, keys, language):
         mo.acquire_orm_object(obj)
 
     if language is not None:
-        dictionary.update({key: mo.dump_localized_key(key, language) for key in keys})
+        dictionary.update(
+            {key: mo.dump_localized_key(key, language) for key in keys})
     else:
         for key in keys:
             value = mo._localized_strings[key] if key in mo._localized_strings else ''
@@ -322,7 +325,8 @@ class _Context(Model):
 
     id = Column(UnicodeText(36), primary_key=True, default=uuid4)
     tid = Column(Integer, default=1, nullable=False)
-    show_steps_navigation_interface = Column(Boolean, default=True, nullable=False)
+    show_steps_navigation_interface = Column(
+        Boolean, default=True, nullable=False)
     allow_recipients_selection = Column(Boolean, default=False, nullable=False)
     maximum_selectable_receivers = Column(Integer, default=0, nullable=False)
     select_all_receivers = Column(Boolean, default=True, nullable=False)
@@ -332,10 +336,12 @@ class _Context(Model):
     tip_reminder = Column(Integer, default=0, nullable=False)
     name = Column(JSON, default=dict, nullable=False)
     description = Column(JSON, default=dict, nullable=False)
-    show_receivers_in_alphabetical_order = Column(Boolean, default=True, nullable=False)
+    show_receivers_in_alphabetical_order = Column(
+        Boolean, default=True, nullable=False)
     score_threshold_high = Column(Integer, default=0, nullable=False)
     score_threshold_medium = Column(Integer, default=0, nullable=False)
-    questionnaire_id = Column(UnicodeText(36), default='default', nullable=False, index=True)
+    questionnaire_id = Column(UnicodeText(
+        36), default='default', nullable=False, index=True)
     additional_questionnaire_id = Column(UnicodeText(36), index=True)
     hidden = Column(Boolean, default=False, nullable=False)
     order = Column(Integer, default=0, nullable=False)
@@ -427,24 +433,30 @@ class _Field(Model):
     step_id = Column(UnicodeText(36), index=True)
     fieldgroup_id = Column(UnicodeText(36), index=True)
     type = Column(UnicodeText, default='inputbox', nullable=False)
-    instance = Column(Enum(EnumFieldInstance), default='instance', nullable=False)
+    instance = Column(Enum(EnumFieldInstance),
+                      default='instance', nullable=False)
     template_id = Column(UnicodeText(36), index=True)
     template_override_id = Column(UnicodeText(36), index=True)
 
     @declared_attr
     def __table_args__(self):
         return (ForeignKeyConstraint(['tid'], ['tenant.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
-                ForeignKeyConstraint(['step_id'], ['step.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
-                ForeignKeyConstraint(['fieldgroup_id'], ['field.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
-                ForeignKeyConstraint(['template_id'], ['field.id'], deferrable=True, initially='DEFERRED'),
-                ForeignKeyConstraint(['template_override_id'], ['field.id'], ondelete='SET NULL', deferrable=True, initially='DEFERRED'),
+                ForeignKeyConstraint(['step_id'], [
+                                     'step.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
+                ForeignKeyConstraint(['fieldgroup_id'], [
+                                     'field.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
+                ForeignKeyConstraint(
+                    ['template_id'], ['field.id'], deferrable=True, initially='DEFERRED'),
+                ForeignKeyConstraint(['template_override_id'], [
+                                     'field.id'], ondelete='SET NULL', deferrable=True, initially='DEFERRED'),
                 CheckConstraint(self.instance.in_(EnumFieldInstance.keys())))
 
     unicode_keys = ['type', 'instance', 'key']
     int_keys = ['x', 'y', 'width', 'triggered_by_score']
     localized_keys = ['label', 'description', 'hint', 'placeholder']
     bool_keys = ['multi_entry', 'required']
-    optional_references = ['template_id', 'step_id', 'fieldgroup_id', 'template_override_id']
+    optional_references = ['template_id', 'step_id',
+                           'fieldgroup_id', 'template_override_id']
 
 
 class _FieldAttr(Model):
@@ -460,7 +472,8 @@ class _FieldAttr(Model):
     @declared_attr
     def __table_args__(self):
         return (UniqueConstraint('field_id', 'name'),
-                ForeignKeyConstraint(['field_id'], ['field.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
+                ForeignKeyConstraint(['field_id'], [
+                                     'field.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
                 CheckConstraint(self.type.in_(EnumFieldAttrType.keys())))
 
     def update(self, values=None):
@@ -491,7 +504,8 @@ class _FieldOption(Model):
     hint1 = Column(JSON, default=dict, nullable=False)
     hint2 = Column(JSON, default=dict, nullable=False)
     score_points = Column(Integer, default=0, nullable=False)
-    score_type = Column(Enum(EnumFieldOptionScoreType), default='addition', nullable=False)
+    score_type = Column(Enum(EnumFieldOptionScoreType),
+                        default='addition', nullable=False)
     block_submission = Column(Boolean, default=False, nullable=False)
     trigger_receiver = Column(JSON, default=list, nullable=False)
 
@@ -570,7 +584,8 @@ class _IdentityAccessRequest(Model):
     @declared_attr
     def __table_args__(self):
         return (ForeignKeyConstraint(['internaltip_id'], ['internaltip.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
-                ForeignKeyConstraint(['request_user_id'], ['user.id'], deferrable=True, initially='DEFERRED'),
+                ForeignKeyConstraint(['request_user_id'], [
+                                     'user.id'], deferrable=True, initially='DEFERRED'),
                 ForeignKeyConstraint(['reply_user_id'], ['user.id'], deferrable=True, initially='DEFERRED'))
 
 
@@ -631,7 +646,8 @@ class _InternalTip(Model):
     reminder_date = Column(DateTime, default=datetime_never, nullable=False)
     enable_two_way_comments = Column(Boolean, default=True, nullable=False)
     enable_attachments = Column(Boolean, default=True, nullable=False)
-    enable_whistleblower_identity = Column(Boolean, default=False, nullable=False)
+    enable_whistleblower_identity = Column(
+        Boolean, default=False, nullable=False)
     important = Column(Boolean, default=False, nullable=False)
     label = Column(UnicodeText, default='', nullable=False)
     last_access = Column(DateTime, default=datetime_now, nullable=False)
@@ -643,13 +659,15 @@ class _InternalTip(Model):
     crypto_pub_key = Column(UnicodeText(56), default='', nullable=False)
     crypto_tip_pub_key = Column(UnicodeText(56), default='', nullable=False)
     crypto_tip_prv_key = Column(UnicodeText(84), default='', nullable=False)
-    deprecated_crypto_files_pub_key = Column(UnicodeText(56), default='', nullable=False)
+    deprecated_crypto_files_pub_key = Column(
+        UnicodeText(56), default='', nullable=False)
 
     @declared_attr
     def __table_args__(self):
         return (UniqueConstraint('tid', 'progressive'),
                 UniqueConstraint('tid', 'receipt_hash'),
-                ForeignKeyConstraint(['tid'], ['tenant.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
+                ForeignKeyConstraint(
+                    ['tid'], ['tenant.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
                 ForeignKeyConstraint(['context_id'], ['context.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'))
 
 
@@ -772,7 +790,8 @@ class _ReceiverTip(Model):
     new = Column(Boolean, default=True, nullable=False)
     enable_notifications = Column(Boolean, default=True, nullable=False)
     crypto_tip_prv_key = Column(UnicodeText(84), default='', nullable=False)
-    deprecated_crypto_files_prv_key = Column(UnicodeText(84), default='', nullable=False)
+    deprecated_crypto_files_prv_key = Column(
+        UnicodeText(84), default='', nullable=False)
 
     @declared_attr
     def __table_args__(self):
@@ -917,7 +936,6 @@ class _Subscriber(Model):
         return ForeignKeyConstraint(['tid'], ['tenant.id'], ondelete='CASCADE', deferrable=True, initially='DEFERRED'),
 
 
-
 class _Tenant(Model):
     """
     Class used to implement tenants
@@ -925,10 +943,10 @@ class _Tenant(Model):
     __tablename__ = 'tenant'
     __table_args__ = {'sqlite_autoincrement': True}
 
-
     id = Column(Integer, primary_key=True)
     creation_date = Column(DateTime, default=datetime_now, nullable=False)
     active = Column(Boolean, default=False, nullable=False)
+    is_profile = Column(Boolean, default=False, nullable=False)
 
     bool_keys = ['active']
 
@@ -954,14 +972,17 @@ class _User(Model):
     mail_address = Column(UnicodeText, default='', nullable=False)
     language = Column(UnicodeText(12), nullable=False)
     password_change_needed = Column(Boolean, default=True, nullable=False)
-    password_change_date = Column(DateTime, default=datetime_null, nullable=False)
+    password_change_date = Column(
+        DateTime, default=datetime_null, nullable=False)
     crypto_prv_key = Column(UnicodeText(84), default='', nullable=False)
     crypto_pub_key = Column(UnicodeText(56), default='', nullable=False)
     crypto_rec_key = Column(UnicodeText(80), default='', nullable=False)
     crypto_bkp_key = Column(UnicodeText(84), default='', nullable=False)
     crypto_escrow_prv_key = Column(UnicodeText(84), default='', nullable=False)
-    crypto_escrow_bkp1_key = Column(UnicodeText(84), default='', nullable=False)
-    crypto_escrow_bkp2_key = Column(UnicodeText(84), default='', nullable=False)
+    crypto_escrow_bkp1_key = Column(
+        UnicodeText(84), default='', nullable=False)
+    crypto_escrow_bkp2_key = Column(
+        UnicodeText(84), default='', nullable=False)
     change_email_address = Column(UnicodeText, default='', nullable=False)
     change_email_token = Column(UnicodeText, unique=True)
     change_email_date = Column(DateTime, default=datetime_null, nullable=False)
@@ -969,8 +990,10 @@ class _User(Model):
     forcefully_selected = Column(Boolean, default=False, nullable=False)
     can_delete_submission = Column(Boolean, default=False, nullable=False)
     can_postpone_expiration = Column(Boolean, default=True, nullable=False)
-    can_grant_access_to_reports = Column(Boolean, default=False, nullable=False)
-    can_transfer_access_to_reports = Column(Boolean, default=False, nullable=False)
+    can_grant_access_to_reports = Column(
+        Boolean, default=False, nullable=False)
+    can_transfer_access_to_reports = Column(
+        Boolean, default=False, nullable=False)
     can_redact_information = Column(Boolean, default=False, nullable=False)
     can_mask_information = Column(Boolean, default=True, nullable=False)
     can_reopen_reports = Column(Boolean, default=True, nullable=False)
@@ -982,10 +1005,12 @@ class _User(Model):
     # BEGIN of PGP key fields
     pgp_key_fingerprint = Column(UnicodeText, default='', nullable=False)
     pgp_key_public = Column(UnicodeText, default='', nullable=False)
-    pgp_key_expiration = Column(DateTime, default=datetime_null, nullable=False)
+    pgp_key_expiration = Column(
+        DateTime, default=datetime_null, nullable=False)
     # END of PGP key fields
 
-    accepted_privacy_policy = Column(DateTime, default=datetime_null, nullable=False)
+    accepted_privacy_policy = Column(
+        DateTime, default=datetime_null, nullable=False)
     clicked_recovery_key = Column(Boolean, default=False, nullable=False)
 
     unicode_keys = ['username', 'role',

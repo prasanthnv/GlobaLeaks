@@ -21,7 +21,8 @@ class InternalTip_v_66(Model):
     reminder_date = Column(DateTime, default=datetime_never, nullable=False)
     enable_two_way_comments = Column(Boolean, default=True, nullable=False)
     enable_attachments = Column(Boolean, default=True, nullable=False)
-    enable_whistleblower_identity = Column(Boolean, default=False, nullable=False)
+    enable_whistleblower_identity = Column(
+        Boolean, default=False, nullable=False)
     important = Column(Boolean, default=False, nullable=False)
     label = Column(UnicodeText, default='', nullable=False)
     last_access = Column(DateTime, default=datetime_now, nullable=False)
@@ -32,7 +33,8 @@ class InternalTip_v_66(Model):
     crypto_pub_key = Column(UnicodeText(56), default='', nullable=False)
     crypto_tip_pub_key = Column(UnicodeText(56), default='', nullable=False)
     crypto_tip_prv_key = Column(UnicodeText(84), default='', nullable=False)
-    deprecated_crypto_files_pub_key = Column(UnicodeText(56), default='', nullable=False)
+    deprecated_crypto_files_pub_key = Column(
+        UnicodeText(56), default='', nullable=False)
 
 
 class ReceiverFile_v_66(Model):
@@ -76,14 +78,17 @@ class User_v_66(Model):
     mail_address = Column(UnicodeText, default='', nullable=False)
     language = Column(UnicodeText(12), nullable=False)
     password_change_needed = Column(Boolean, default=True, nullable=False)
-    password_change_date = Column(DateTime, default=datetime_null, nullable=False)
+    password_change_date = Column(
+        DateTime, default=datetime_null, nullable=False)
     crypto_prv_key = Column(UnicodeText(84), default='', nullable=False)
     crypto_pub_key = Column(UnicodeText(56), default='', nullable=False)
     crypto_rec_key = Column(UnicodeText(80), default='', nullable=False)
     crypto_bkp_key = Column(UnicodeText(84), default='', nullable=False)
     crypto_escrow_prv_key = Column(UnicodeText(84), default='', nullable=False)
-    crypto_escrow_bkp1_key = Column(UnicodeText(84), default='', nullable=False)
-    crypto_escrow_bkp2_key = Column(UnicodeText(84), default='', nullable=False)
+    crypto_escrow_bkp1_key = Column(
+        UnicodeText(84), default='', nullable=False)
+    crypto_escrow_bkp2_key = Column(
+        UnicodeText(84), default='', nullable=False)
     change_email_address = Column(UnicodeText, default='', nullable=False)
     change_email_token = Column(UnicodeText, unique=True)
     change_email_date = Column(DateTime, default=datetime_null, nullable=False)
@@ -91,8 +96,10 @@ class User_v_66(Model):
     forcefully_selected = Column(Boolean, default=False, nullable=False)
     can_delete_submission = Column(Boolean, default=False, nullable=False)
     can_postpone_expiration = Column(Boolean, default=True, nullable=False)
-    can_grant_access_to_reports = Column(Boolean, default=False, nullable=False)
-    can_transfer_access_to_reports = Column(Boolean, default=False, nullable=False)
+    can_grant_access_to_reports = Column(
+        Boolean, default=False, nullable=False)
+    can_transfer_access_to_reports = Column(
+        Boolean, default=False, nullable=False)
     can_mask_information = Column(Boolean, default=False, nullable=False)
     can_redact_information = Column(Boolean, default=False, nullable=False)
     can_edit_general_settings = Column(Boolean, default=False, nullable=False)
@@ -134,12 +141,22 @@ class MigrationScript(MigrationBase):
         for c in self.session_new.query(self.model_from['Config']) \
                                  .filter(self.model_from['Config'].var_name.in_(['footer_privacy_policy',
                                                                                  'footer_whistleblowing_policy'])):
-           for language in self.session_old.query(self.model_from['EnabledLanguage'].name) \
-                                           .filter(self.model_from['EnabledLanguage'].tid == c.tid):
-               x = self.model_to['ConfigL10N']()
-               x.tid = c.tid
-               x.lang = language[0]
-               x.var_name = c.var_name
-               x.value = c.value
-               self.session_new.add(x)
-               self.entries_count['ConfigL10N'] += 1
+            for language in self.session_old.query(self.model_from['EnabledLanguage'].name) \
+                                            .filter(self.model_from['EnabledLanguage'].tid == c.tid):
+                x = self.model_to['ConfigL10N']()
+                x.tid = c.tid
+                x.lang = language[0]
+                x.var_name = c.var_name
+                x.value = c.value
+                self.session_new.add(x)
+                self.entries_count['ConfigL10N'] += 1
+
+
+class Tenant_v_67(Model):
+    __tablename__ = 'tenant'
+
+    id = Column(Integer, primary_key=True)
+    creation_date = Column(DateTime, default=datetime_now, nullable=False)
+    active = Column(Boolean, default=False, nullable=False)
+    is_profile = Column(Boolean, default=False, nullable=False)
+    bool_keys = ['active']

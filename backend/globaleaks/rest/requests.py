@@ -84,7 +84,8 @@ AdminTenantDesc = {
     'name': str,
     'mode': str,
     'active': bool,
-    'subdomain': subdomain_regexp_or_empty
+    'subdomain': subdomain_regexp_or_empty,
+    'is_profile': bool
 }
 
 FileDesc = {
@@ -280,7 +281,8 @@ AdminNotificationDesc = {
     'tip_expiration_threshold': int
 }
 
-AdminNotificationDesc.update({k: str for k in ConfigL10NFilters['notification']})
+AdminNotificationDesc.update(
+    {k: str for k in ConfigL10NFilters['notification']})
 
 AdminFieldOptionDesc = {
     'id': uuid_regexp_or_empty,
@@ -294,7 +296,8 @@ AdminFieldOptionDesc = {
     'trigger_receiver': list
 }
 
-AdminFieldOptionDescRaw = get_multilang_request_format(AdminFieldOptionDesc, models.FieldOption.localized_keys)
+AdminFieldOptionDescRaw = get_multilang_request_format(
+    AdminFieldOptionDesc, models.FieldOption.localized_keys)
 
 AdminFieldAttrDesc = {
     'id': uuid_regexp_or_empty,
@@ -303,7 +306,8 @@ AdminFieldAttrDesc = {
     'value': list
 }
 
-AdminFieldAttrDescRaw = get_multilang_request_format(AdminFieldAttrDesc, models.FieldAttr.localized_keys)
+AdminFieldAttrDescRaw = get_multilang_request_format(
+    AdminFieldAttrDesc, models.FieldAttr.localized_keys)
 
 AdminFieldDesc = {
     'id': key_regexp_or_empty,
@@ -329,7 +333,8 @@ AdminFieldDesc = {
     'triggered_by_options': list
 }
 
-AdminFieldDescRaw = get_multilang_request_format(AdminFieldDesc, models.Field.localized_keys)
+AdminFieldDescRaw = get_multilang_request_format(
+    AdminFieldDesc, models.Field.localized_keys)
 AdminFieldDescRaw['options'] = [AdminFieldOptionDescRaw]
 # AdminFieldDescRaw['attrs']; FIXME: we still miss a way for validating a hierarchy where
 #                                    we have a variable dictionary like the attrs dictionary.
@@ -345,7 +350,8 @@ AdminStepDesc = {
     'triggered_by_options': list
 }
 
-AdminStepDescRaw = get_multilang_request_format(AdminStepDesc, models.Step.localized_keys)
+AdminStepDescRaw = get_multilang_request_format(
+    AdminStepDesc, models.Step.localized_keys)
 AdminStepDescRaw['children'] = [AdminFieldDescRaw]
 
 AdminQuestionnaireDesc = {
@@ -354,7 +360,8 @@ AdminQuestionnaireDesc = {
     'steps': list
 }
 
-AdminQuestionnaireDescRaw = get_multilang_request_format(AdminQuestionnaireDesc, models.Questionnaire.localized_keys)
+AdminQuestionnaireDescRaw = get_multilang_request_format(
+    AdminQuestionnaireDesc, models.Questionnaire.localized_keys)
 AdminQuestionnaireDescRaw['steps'] = list
 
 AdminContextDesc = {
